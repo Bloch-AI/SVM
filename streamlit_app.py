@@ -51,13 +51,13 @@ def main():
     # ================================
     # Sidebar: Feature Selection for Visualization
     # ================================
-    st.sidebar.header("Feature Selection for Visualization")
+    st.sidebar.header("Feature Selection for Visualisation")
     iris = datasets.load_iris()
     feature_names = iris.feature_names
     x_feature = st.sidebar.selectbox("X-axis feature", options=feature_names, index=0)
     y_feature = st.sidebar.selectbox("Y-axis feature", options=feature_names, index=1)
     if x_feature == y_feature:
-        st.sidebar.warning("Please select two different features for visualization.")
+        st.sidebar.warning("Please select two different features for visualisation.")
 
     # ================================
     # Load and Display the Dataset
