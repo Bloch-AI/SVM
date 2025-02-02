@@ -141,7 +141,7 @@ def main():
     st.markdown("---")
     st.markdown("### Further Reading")
     st.markdown(
-        "For a detailed discussion on SVMs, check out my [Medium article](https://medium.com/your-article-link)."
+        "For a detailed discussion on SVMs, check out my [Medium article](https://blochai.medium.com/)."
     )
 
     # ================================
