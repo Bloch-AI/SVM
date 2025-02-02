@@ -51,13 +51,13 @@ def main():
     # ================================
     # Sidebar: Feature Selection for Visualization
     # ================================
-    st.sidebar.header("Feature Selection for Visualisation")
+    st.sidebar.header("Feature Selection for Visualization")
     iris = datasets.load_iris()
     feature_names = iris.feature_names
     x_feature = st.sidebar.selectbox("X-axis feature", options=feature_names, index=0)
     y_feature = st.sidebar.selectbox("Y-axis feature", options=feature_names, index=1)
     if x_feature == y_feature:
-        st.sidebar.warning("Please select two different features for visualisation.")
+        st.sidebar.warning("Please select two different features for visualization.")
 
     # ================================
     # Load and Display the Dataset
@@ -83,7 +83,6 @@ def main():
     # ================================
     # Create and Train the SVM Model
     # ================================
-    # For the polynomial kernel, include the degree parameter; otherwise, ignore it.
     if kernel == "poly":
         model = SVC(kernel=kernel, C=C, gamma=gamma, degree=degree, probability=True)
     else:
@@ -118,19 +117,16 @@ def main():
     # Plot the Decision Boundary
     # ================================
     st.subheader("Decision Boundary")
-    # Create a meshgrid for plotting the decision boundary
     x_min, x_max = X_selected[:, 0].min() - 1, X_selected[:, 0].max() + 1
     y_min, y_max = X_selected[:, 1].min() - 1, X_selected[:, 1].max() + 1
     xx, yy = np.meshgrid(np.linspace(x_min, x_max, 500),
                          np.linspace(y_min, y_max, 500))
     
-    # Predict over the grid
     Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
     Z = Z.reshape(xx.shape)
     
-    # Plot contour and training points
     fig, ax = plt.subplots()
-    contour = ax.contourf(xx, yy, Z, alpha=0.3, cmap=plt.cm.coolwarm)
+    ax.contourf(xx, yy, Z, alpha=0.3, cmap=plt.cm.coolwarm)
     scatter = ax.scatter(X_train[:, 0], X_train[:, 1], c=y_train, edgecolor='k', s=50, cmap=plt.cm.coolwarm)
     ax.set_xlabel(x_feature)
     ax.set_ylabel(y_feature)
@@ -139,14 +135,36 @@ def main():
     ax.add_artist(legend1)
     st.pyplot(fig)
 
-# ================================
-# Article Link Section
-# ================================
-st.markdown("### Further Reading")
-st.markdown(
-    "For a detailed discussion on SVMs, check out my [Medium article](https://blochai.medium.com/)."
-)
+    # ================================
+    # Article Link Section (at the bottom)
+    # ================================
+    st.markdown("---")
+    st.markdown("### Further Reading")
+    st.markdown(
+        "For a detailed discussion on SVMs, check out my [Medium article](https://medium.com/your-article-link)."
+    )
+
+    # ================================
+    # Add Footer
+    # ================================
+    footer = """
+    <style>
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: black;
+        color: white;
+        text-align: center;
+        padding: 10px;
+    }
+    </style>
+    <div class="footer">
+      <p>© 2025 Bloch AI LTD - All Rights Reserved. <a href="https://www.bloch.ai" style="color: white;">www.bloch.ai</a></p>
+    </div>
+    """
+    st.markdown(footer, unsafe_allow_html=True)
 
 if __name__ == '__main__':
     main()
-
