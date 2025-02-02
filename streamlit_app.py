@@ -42,7 +42,7 @@ def main():
     st.write(
         """
         Welcome to this educational app that demonstrates how a Support Vector Machine (SVM) works on the Iris dataset.
-        Experiment with the hyperparameters using the sidebar, and observe how these settings affect the models decision boundary and performance.
+        Experiment with the hyperparameters using the sidebar, and observe how these settings affect the model's decision boundary and performance.
         """
     )
 
@@ -89,7 +89,7 @@ def main():
     # Regularisation parameter C
     C = st.sidebar.slider("C (Regularisation parameter)", 0.01, 10.0, 1.0)
     
-    # For the polynomial kernel, choose the degree
+    # For the Poly kernel, choose the degree
     if kernel == "poly":
         degree = st.sidebar.slider("Degree (for Poly kernel)", 2, 5, 3)
     else:
@@ -97,7 +97,8 @@ def main():
     
     # Gamma parameter for applicable kernels
     if kernel in ["rbf", "poly", "sigmoid"]:
-        gamma_options = {"Scale": "scale", "Auto": "auto", "Manual": "manual"}
+        # Remove 'Auto' option to avoid deprecation issues
+        gamma_options = {"Scale": "scale", "Manual": "manual"}
         selected_gamma_option = st.sidebar.selectbox("Gamma Option", options=list(gamma_options.keys()), index=0)
         gamma_option_value = gamma_options[selected_gamma_option]
         if gamma_option_value == "manual":
@@ -127,7 +128,8 @@ def main():
     x_feature = st.sidebar.selectbox("X-axis Feature", options=feature_names, index=0)
     y_feature = st.sidebar.selectbox("Y-axis Feature", options=feature_names, index=1)
     if x_feature == y_feature:
-        st.sidebar.warning("Please select two different features for visualisation.")
+        st.sidebar.error("X and Y features must be different.")
+        st.stop()  # Halt execution if the selected features are identical
 
     # ================================
     # Load and Display the Dataset
@@ -161,10 +163,11 @@ def main():
     # ================================
     # Create and Train the SVM Model
     # ================================
+    # Removed probability=True to avoid unnecessary overhead
     if kernel == "poly":
-        model = SVC(kernel=kernel, C=C, gamma=gamma, degree=degree, probability=True)
+        model = SVC(kernel=kernel, C=C, gamma=gamma, degree=degree)
     else:
-        model = SVC(kernel=kernel, C=C, gamma=gamma, probability=True)
+        model = SVC(kernel=kernel, C=C, gamma=gamma)
 
     model.fit(X_train, y_train)
 
@@ -206,7 +209,7 @@ def main():
     st.pyplot(fig_cm)
 
     st.info(
-        "The **Confusion Matrix** visualises the classifiers performance. Each row represents the actual class, while each column represents the predicted class. "
+        "The **Confusion Matrix** visualises the classifier's performance. Each row represents the actual class, while each column represents the predicted class. "
         "The diagonal elements show the number of correct predictions for each class, whereas off-diagonal elements indicate misclassifications. "
         "Ideally, most of the values should be concentrated along the diagonal."
     )
@@ -216,8 +219,8 @@ def main():
     # ================================
     st.info(
         "The **Decision Boundary** plot illustrates the regions in the feature space that the model assigns to each class. "
-        "The coloured areas indicate the model's predictions, and the overlaid points represent the training samples. "
-        "This visualisation helps you understand how the selected hyperparameters influence the separation of classes."
+        "The coloured areas indicate the model's predictions, and the overlaid points represent the data samples. "
+        "Both training and test points are plotted for a comprehensive visual comparison."
     )
     st.subheader("Decision Boundary")
     x_min, x_max = X_selected[:, 0].min() - 1, X_selected[:, 0].max() + 1
@@ -230,11 +233,15 @@ def main():
     
     fig, ax = plt.subplots()
     ax.contourf(xx, yy, Z, alpha=0.3, cmap=plt.cm.coolwarm)
-    scatter = ax.scatter(X_train[:, 0], X_train[:, 1], c=y_train, edgecolor='k', s=50, cmap=plt.cm.coolwarm)
+    # Plot training points
+    scatter_train = ax.scatter(X_train[:, 0], X_train[:, 1], c=y_train, edgecolor='k', s=50, cmap=plt.cm.coolwarm, label="Train")
+    # Overlay test points with a distinct marker (e.g. '^')
+    scatter_test = ax.scatter(X_test[:, 0], X_test[:, 1], c=y_test, marker='^', edgecolor='k', s=70, cmap=plt.cm.coolwarm, label="Test")
     ax.set_xlabel(x_feature)
     ax.set_ylabel(y_feature)
-    ax.set_title("Decision Boundary on Training Data")
-    legend1 = ax.legend(*scatter.legend_elements(), title="Classes")
+    ax.set_title("Decision Boundary on Training & Test Data")
+    legend1 = ax.legend(*scatter_train.legend_elements(), title="Train Classes", loc="upper left")
+    legend2 = ax.legend(*scatter_test.legend_elements(), title="Test Classes", loc="lower right")
     ax.add_artist(legend1)
     st.pyplot(fig)
 
@@ -250,10 +257,11 @@ def main():
     # ================================
     # Add Footer
     # ================================
+    # Changed CSS from fixed to relative positioning to avoid overlap with content
     footer = """
     <style>
     .footer {
-        position: fixed;
+        position: relative;
         left: 0;
         bottom: 0;
         width: 100%;
