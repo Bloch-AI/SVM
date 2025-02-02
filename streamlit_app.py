@@ -13,8 +13,8 @@ def main():
     st.title("Interactive SVM Classifier on the Iris Dataset")
     st.write(
         """
-        This Streamlit app allows you to experiment with the hyperparameters for a Support Vector Machine (SVM) model and see its performance on the Iris dataset.  
-        Adjust the settings in the sidebar and watch how the decision boundary and performance metrics change!
+        Welcome to this educational app that demonstrates how a Support Vector Machine (SVM) works on the Iris dataset.
+        Experiment with the hyperparameters using the sidebar, and observe how these settings affect the model's decision boundary and performance.
         """
     )
 
@@ -23,12 +23,42 @@ def main():
     # ================================
     st.sidebar.header("SVM Hyperparameters")
     
+    # Educational expander for hyperparameters
+    with st.sidebar.expander("Learn about SVM Hyperparameters"):
+        st.markdown(
+            """
+            **Kernel:**  
+            The kernel determines the transformation applied to your data before finding a decision boundary.  
+            - **Linear:** Uses a straight line to separate classes. Best for data that is linearly separable.  
+            - **Poly:** Uses a polynomial function. Adjust the degree to control the curvature of the decision boundary.  
+            - **RBF:** Uses a radial basis function. Ideal for capturing non-linear relationships in the data.  
+            - **Sigmoid:** Mimics the activation function of a neural network.
+            
+            **C (Regularisation parameter):**  
+            Controls the trade-off between maximising the margin (the gap between classes) and minimising misclassification errors.  
+            A higher value of C emphasises correct classification of all training points, which can lead to overfitting.
+            
+            **Degree:**  
+            Applicable only for the Poly kernel.  
+            Determines the degree of the polynomial used to create the decision boundary.
+            
+            **Gamma:**  
+            Defines the influence of each training example.  
+            A low gamma means that the influence reaches far, while a high gamma means it is more localised.  
+            For RBF, Poly, and Sigmoid kernels, selecting the right gamma is crucial.
+            
+            **Test Set Size (Fraction):**  
+            Specifies the proportion of the dataset to be reserved for testing.  
+            A smaller fraction leaves more data for training, which may improve model performance.
+            """
+        )
+
     # Choose the kernel (displayed with capitalised names)
     kernel_options = {"Linear": "linear", "Poly": "poly", "RBF": "rbf", "Sigmoid": "sigmoid"}
     selected_kernel = st.sidebar.selectbox("Select Kernel", options=list(kernel_options.keys()), index=2)
     kernel = kernel_options[selected_kernel]
     
-    # Regularisation parameter C (UK English: regularisation)
+    # Regularisation parameter C
     C = st.sidebar.slider("C (Regularisation parameter)", 0.01, 10.0, 1.0)
     
     # For the polynomial kernel, choose the degree
@@ -56,6 +86,14 @@ def main():
     # Sidebar: Feature Selection for Visualisation
     # ================================
     st.sidebar.header("Feature Selection for Visualisation")
+    with st.sidebar.expander("Learn about Feature Selection"):
+        st.markdown(
+            """
+            **X-axis Feature & Y-axis Feature:**  
+            Choose two different features from the Iris dataset to visualise the data and the SVM decision boundary in 2D.
+            Selecting two distinct features allows for a meaningful visualisation of how the model separates the classes.
+            """
+        )
     iris = datasets.load_iris()
     feature_names = iris.feature_names
     x_feature = st.sidebar.selectbox("X-axis Feature", options=feature_names, index=0)
@@ -97,6 +135,11 @@ def main():
     # ================================
     # Evaluate the Model
     # ================================
+    st.info(
+        "The **Model Performance** section below displays how well the SVM has classified the test data. "
+        "You will see the accuracy score, a detailed classification report, and the confusion matrix which indicates "
+        "the number of correct and incorrect predictions for each class."
+    )
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     st.subheader("Model Performance")
@@ -120,6 +163,10 @@ def main():
     # ================================
     # Plot the Decision Boundary
     # ================================
+    st.info(
+        "The **Decision Boundary** plot below shows how the SVM separates the classes in the training data. "
+        "The coloured regions indicate the model's predicted classes, while the points represent the training data."
+    )
     st.subheader("Decision Boundary")
     x_min, x_max = X_selected[:, 0].min() - 1, X_selected[:, 0].max() + 1
     y_min, y_max = X_selected[:, 1].min() - 1, X_selected[:, 1].max() + 1
@@ -172,4 +219,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
