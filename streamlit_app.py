@@ -42,7 +42,7 @@ def main():
     st.write(
         """
         Welcome to this educational app that demonstrates how a Support Vector Machine (SVM) works on the Iris dataset.
-        Experiment with the hyperparameters using the sidebar, and observe how these settings affect the model's decision boundary and performance.
+        Experiment with the hyperparameters using the sidebar, and observe how these settings affect the models decision boundary and performance.
         """
     )
 
