@@ -139,43 +139,13 @@ def main():
     ax.add_artist(legend1)
     st.pyplot(fig)
 
-    # ================================
-    # Expandable Article Section
-    # ================================
-    with st.expander("Read the full article on SVMs"):
-        article_content = """
-**In the vast landscape of machine learning algorithms, Support Vector Machines (SVMs) stand out as a powerful and elegant solution for classification problems.**
-
-*Originally developed in the 1990s, SVMs have proven their worth across numerous fields, from medical diagnosis to text classification. But what makes them so special, and when should you consider using them?*
-
-### Understanding SVMs Through Everyday Examples
-Imagine you're organising a massive library with thousands of books. Your task is to separate fiction from non-fiction, but it's not always a clear-cut decision. Some books, like historical fiction or creative non-fiction, blur the lines between categories. This is exactly the kind of challenge that SVMs excel at handling.
-
-An SVM works by finding the best possible dividing line (or plane in higher dimensions), the "hyperplane" between different categories. But it doesn't just find any line—it finds the line that creates the widest possible "corridor" between the categories. Think of it like creating the widest possible aisle in your library, making it less likely for books to be misplaced or miscategorised. This is the magic behind its accuracy.
-
-### Real-World Applications: Where SVMs Shine
-SVMs have found their way into countless real-world applications. In medical imaging, they help identify potential tumours in X-rays and MRIs. Email systems use them to filter out spam messages. Bioinformaticians employ them to classify genes and predict protein functions. Financial institutions leverage SVMs for forecasting and risk assessment.
-
-What makes SVMs particularly valuable in these contexts is their precision. Unlike some other machine learning algorithms that might make probabilistic guesses, because of that "corridor," SVMs draw relatively clear, definitive boundaries between categories. This makes them especially useful in situations where certainty is crucial.
-
-### The Power and Limitations of SVMs: Understanding When and Why to Use Them
-Every tool has its niche, and SVMs are no exception. To understand their capabilities and limitations, we need to explore both their computational characteristics and practical applications.
-
-**Where SVMs Excel**  
-SVMs shine in scenarios with clear category separation and moderate-sized datasets. Their ability to handle high-dimensional data (aka data with lots of columns or features) makes them particularly effective for text classification and image recognition tasks. This strength comes from their mathematical foundation, the ability to work in high-dimensional spaces without explicitly computing the coordinates using what we call the "kernel trick."
-
-**Understanding the Limitations**  
-However, SVMs come with notable limitations that practitioners need to understand. The most significant challenge emerges with kernel-based SVMs and large datasets. Here's where the mathematics becomes crucial: kernel methods require calculating similarities between every pair of data points, leading to quadratic growth in both computational needs and memory requirements.
-
-**The Magic Behind the Mathematics**  
-While the mathematics behind SVMs can appear daunting, the core concept is beautifully simple. It's all about finding the optimal boundary between categories while maximising the margin, that "corridor" we talked about earlier. The algorithm pays special attention to the points closest to this boundary, called support vectors, which give the method its name.
-
-### The Power of the Kernel Trick
-Before we dive into different types of kernels, let's understand what we mean by a 'kernel' and why mathematicians call this approach 'the kernel trick'. In computing, a kernel typically refers to the core part of something, like the kernel of an operating system that manages all the basic operations. Similarly, in mathematics, a kernel function is at the core of how SVMs handle complex data.
-
-*[The article continues with detailed explanations on Linear, Polynomial, RBF, and Sigmoid kernels, as well as tuning SVM hyperparameters, their strengths, limitations, and real-world applications.]*        
-        """
-        st.markdown(article_content)
+# ================================
+# Article Link Section
+# ================================
+st.markdown("### Further Reading")
+st.markdown(
+    "For a detailed discussion on SVMs, check out my [Medium article](https://blochai.medium.com/)."
+)
 
 if __name__ == '__main__':
     main()
