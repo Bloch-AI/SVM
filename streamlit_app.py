@@ -111,6 +111,14 @@ def main():
 
     st.subheader("Iris Dataset (first 5 rows)")
     st.write(df.head())
+    
+    # Explain the class labels
+    st.info(
+        "Note: In the Iris dataset, the target classes correspond to the following species:\n"
+        "- **0:** Setosa\n"
+        "- **1:** Versicolor\n"
+        "- **2:** Virginica"
+    )
 
     # Use only the two selected features (for visualisation and model training)
     X_selected = df[[x_feature, y_feature]].values
@@ -137,8 +145,8 @@ def main():
     # ================================
     st.info(
         "The **Model Performance** section below displays how well the SVM has classified the test data. "
-        "You will see the accuracy score, a detailed classification report, and the confusion matrix which indicates "
-        "the number of correct and incorrect predictions for each class."
+        "It includes the overall accuracy, a detailed classification report, and a confusion matrix. "
+        "These metrics help you understand the model's strengths and any areas that might require tuning."
     )
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
@@ -150,6 +158,15 @@ def main():
     st.text("Classification Report:")
     st.write(pd.DataFrame(report).transpose())
 
+    st.info(
+        "The **Classification Report** provides detailed metrics for each class:\n\n"
+        "- **Precision:** The proportion of correct predictions among those predicted as a given class.\n"
+        "- **Recall:** The proportion of actual instances of the class that were correctly predicted.\n"
+        "- **F1-Score:** The harmonic mean of precision and recall; a higher value indicates a better balance between the two.\n"
+        "- **Support:** The number of actual occurrences of the class in the test set.\n\n"
+        "These metrics allow you to assess the performance of the model on each species."
+    )
+
     # Confusion matrix
     cm = confusion_matrix(y_test, y_pred)
     st.subheader("Confusion Matrix")
@@ -157,15 +174,22 @@ def main():
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
                 xticklabels=iris.target_names, yticklabels=iris.target_names, ax=ax_cm)
     ax_cm.set_xlabel("Predicted")
-    ax_cm.set_ylabel("True")
+    ax_cm.set_ylabel("Actual")
     st.pyplot(fig_cm)
+
+    st.info(
+        "The **Confusion Matrix** visualises the classifier's performance. Each row represents the actual class, while each column represents the predicted class. "
+        "The diagonal elements show the number of correct predictions for each class, whereas off-diagonal elements indicate misclassifications. "
+        "Ideally, most of the values should be concentrated along the diagonal."
+    )
 
     # ================================
     # Plot the Decision Boundary
     # ================================
     st.info(
-        "The **Decision Boundary** plot below shows how the SVM separates the classes in the training data. "
-        "The coloured regions indicate the model's predicted classes, while the points represent the training data."
+        "The **Decision Boundary** plot illustrates the regions in the feature space that the model assigns to each class. "
+        "The coloured areas indicate the model's predictions, and the overlaid points represent the training samples. "
+        "This visualisation helps you understand how the selected hyperparameters influence the separation of classes."
     )
     st.subheader("Decision Boundary")
     x_min, x_max = X_selected[:, 0].min() - 1, X_selected[:, 0].max() + 1
