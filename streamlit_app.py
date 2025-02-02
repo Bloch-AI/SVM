@@ -15,7 +15,7 @@
 # - Model performance metrics such as overall accuracy, and a detailed classification report (including
 #   precision, recall, F1-score, and support)
 # - A confusion matrix to show correct versus misclassifications
-# - A decision boundary plot which visualises the regions of the feature space assigned to each class.
+# - Separate decision boundary plots which visualise the regions of the feature space assigned to each class for training and test data.
 #
 # Educational explanations are provided throughout the app (via sidebar expanders and info boxes)
 # to help users understand the effect of each hyperparameter, the significance of each evaluation metric,
@@ -42,7 +42,7 @@ def main():
     st.write(
         """
         Welcome to this educational app that demonstrates how a Support Vector Machine (SVM) works on the Iris dataset.
-        Experiment with the hyperparameters using the sidebar, and observe how these settings affect the model's decision boundary and performance.
+        Experiment with the hyperparameters using the sidebar, and observe how these settings affect the models decision boundary and performance.
         """
     )
 
@@ -177,7 +177,7 @@ def main():
     st.info(
         "The **Model Performance** section below displays how well the SVM has classified the test data. "
         "It includes the overall accuracy, a detailed classification report, and a confusion matrix. "
-        "These metrics help you understand the model's strengths and any areas that might require tuning."
+        "These metrics help you understand the models strengths and any areas that might require tuning."
     )
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
@@ -209,7 +209,7 @@ def main():
     st.pyplot(fig_cm)
 
     st.info(
-        "The **Confusion Matrix** visualises the classifier's performance. Each row represents the actual class, while each column represents the predicted class. "
+        "The **Confusion Matrix** visualises the classifiers performance. Each row represents the actual class, while each column represents the predicted class. "
         "The diagonal elements show the number of correct predictions for each class, whereas off-diagonal elements indicate misclassifications. "
         "Ideally, most of the values should be concentrated along the diagonal."
     )
@@ -217,12 +217,7 @@ def main():
     # ================================
     # Plot the Decision Boundary
     # ================================
-    st.info(
-        "The **Decision Boundary** plot illustrates the regions in the feature space that the model assigns to each class. "
-        "The coloured areas indicate the model's predictions, and the overlaid points represent the data samples. "
-        "Both training and test points are plotted for a comprehensive visual comparison."
-    )
-    st.subheader("Decision Boundary")
+    # Compute the decision boundary over a grid that covers the feature space
     x_min, x_max = X_selected[:, 0].min() - 1, X_selected[:, 0].max() + 1
     y_min, y_max = X_selected[:, 1].min() - 1, X_selected[:, 1].max() + 1
     xx, yy = np.meshgrid(np.linspace(x_min, x_max, 500),
@@ -231,19 +226,36 @@ def main():
     Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
     Z = Z.reshape(xx.shape)
     
-    fig, ax = plt.subplots()
-    ax.contourf(xx, yy, Z, alpha=0.3, cmap=plt.cm.coolwarm)
-    # Plot training points
-    scatter_train = ax.scatter(X_train[:, 0], X_train[:, 1], c=y_train, edgecolor='k', s=50, cmap=plt.cm.coolwarm, label="Train")
-    # Overlay test points with a distinct marker (e.g. '^')
-    scatter_test = ax.scatter(X_test[:, 0], X_test[:, 1], c=y_test, marker='^', edgecolor='k', s=70, cmap=plt.cm.coolwarm, label="Test")
-    ax.set_xlabel(x_feature)
-    ax.set_ylabel(y_feature)
-    ax.set_title("Decision Boundary on Training & Test Data")
-    legend1 = ax.legend(*scatter_train.legend_elements(), title="Train Classes", loc="upper left")
-    legend2 = ax.legend(*scatter_test.legend_elements(), title="Test Classes", loc="lower right")
-    ax.add_artist(legend1)
-    st.pyplot(fig)
+    # Plot decision boundary with training data
+    st.info(
+        "The **Decision Boundary** plot below shows the regions in the feature space that the model assigns to each class, "
+        "overlaid with the training data points."
+    )
+    st.subheader("Decision Boundary on Training Data")
+    fig_train, ax_train = plt.subplots()
+    ax_train.contourf(xx, yy, Z, alpha=0.3, cmap=plt.cm.coolwarm)
+    scatter_train = ax_train.scatter(X_train[:, 0], X_train[:, 1], c=y_train, edgecolor='k', s=50, cmap=plt.cm.coolwarm)
+    ax_train.set_xlabel(x_feature)
+    ax_train.set_ylabel(y_feature)
+    ax_train.set_title("Decision Boundary on Training Data")
+    legend_train = ax_train.legend(*scatter_train.legend_elements(), title="Training Classes")
+    ax_train.add_artist(legend_train)
+    st.pyplot(fig_train)
+    
+    # Plot decision boundary with test data
+    st.info(
+        "This plot shows the same decision boundary, now overlaid with the test data points to illustrate how well the model generalises."
+    )
+    st.subheader("Decision Boundary on Test Data")
+    fig_test, ax_test = plt.subplots()
+    ax_test.contourf(xx, yy, Z, alpha=0.3, cmap=plt.cm.coolwarm)
+    scatter_test = ax_test.scatter(X_test[:, 0], X_test[:, 1], c=y_test, marker='^', edgecolor='k', s=70, cmap=plt.cm.coolwarm)
+    ax_test.set_xlabel(x_feature)
+    ax_test.set_ylabel(y_feature)
+    ax_test.set_title("Decision Boundary on Test Data")
+    legend_test = ax_test.legend(*scatter_test.legend_elements(), title="Test Classes")
+    ax_test.add_artist(legend_test)
+    st.pyplot(fig_test)
 
     # ================================
     # Article Link Section (at the bottom)
@@ -257,11 +269,11 @@ def main():
     # ================================
     # Add Footer
     # ================================
-    # Changed CSS from fixed to relative positioning to avoid overlap with content
+    # Fixed footer across the bottom of the screen
     footer = """
     <style>
     .footer {
-        position: relative;
+        position: fixed;
         left: 0;
         bottom: 0;
         width: 100%;
