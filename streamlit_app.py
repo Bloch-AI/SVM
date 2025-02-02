@@ -23,25 +23,29 @@ def main():
     # ================================
     st.sidebar.header("SVM Hyperparameters")
     
-    # Choose the kernel
-    kernel = st.sidebar.selectbox("Select Kernel", options=["Linear", "Poly", "RBF", "Sigmoid"], index=2)
+    # Choose the kernel (displayed with capitalised names)
+    kernel_options = {"Linear": "linear", "Poly": "poly", "RBF": "rbf", "Sigmoid": "sigmoid"}
+    selected_kernel = st.sidebar.selectbox("Select Kernel", options=list(kernel_options.keys()), index=2)
+    kernel = kernel_options[selected_kernel]
     
-    # Regularization parameter C
+    # Regularisation parameter C (UK English: regularisation)
     C = st.sidebar.slider("C (Regularisation parameter)", 0.01, 10.0, 1.0)
     
     # For the polynomial kernel, choose the degree
     if kernel == "poly":
-        degree = st.sidebar.slider("Degree (for polynomial kernel)", 2, 5, 3)
+        degree = st.sidebar.slider("Degree (for Poly kernel)", 2, 5, 3)
     else:
         degree = 3  # default value (not used if kernel != 'poly')
     
     # Gamma parameter for kernels that use it
     if kernel in ["rbf", "poly", "sigmoid"]:
-        gamma_option = st.sidebar.selectbox("Gamma Option", options=["Scale", "Auto", "Manual"], index=0)
-        if gamma_option == "Manual":
+        gamma_options = {"Scale": "scale", "Auto": "auto", "Manual": "manual"}
+        selected_gamma_option = st.sidebar.selectbox("Gamma Option", options=list(gamma_options.keys()), index=0)
+        gamma_option_value = gamma_options[selected_gamma_option]
+        if gamma_option_value == "manual":
             gamma = st.sidebar.slider("Gamma value", 0.001, 1.0, 0.1)
         else:
-            gamma = gamma_option
+            gamma = gamma_option_value
     else:
         gamma = "scale"  # Not used for linear kernel
 
@@ -49,15 +53,15 @@ def main():
     test_size = st.sidebar.slider("Test Set Size (Fraction)", 0.1, 0.5, 0.2, step=0.05)
 
     # ================================
-    # Sidebar: Feature Selection for Visualization
+    # Sidebar: Feature Selection for Visualisation
     # ================================
-    st.sidebar.header("Feature Selection for Visualization")
+    st.sidebar.header("Feature Selection for Visualisation")
     iris = datasets.load_iris()
     feature_names = iris.feature_names
-    x_feature = st.sidebar.selectbox("X-axis feature", options=feature_names, index=0)
-    y_feature = st.sidebar.selectbox("Y-axis feature", options=feature_names, index=1)
+    x_feature = st.sidebar.selectbox("X-axis Feature", options=feature_names, index=0)
+    y_feature = st.sidebar.selectbox("Y-axis Feature", options=feature_names, index=1)
     if x_feature == y_feature:
-        st.sidebar.warning("Please select two different features for visualization.")
+        st.sidebar.warning("Please select two different features for visualisation.")
 
     # ================================
     # Load and Display the Dataset
@@ -70,7 +74,7 @@ def main():
     st.subheader("Iris Dataset (first 5 rows)")
     st.write(df.head())
 
-    # Use only the two selected features (for visualization and model training)
+    # Use only the two selected features (for visualisation and model training)
     X_selected = df[[x_feature, y_feature]].values
 
     # ================================
@@ -168,3 +172,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
