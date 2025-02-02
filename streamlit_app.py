@@ -24,10 +24,10 @@ def main():
     st.sidebar.header("SVM Hyperparameters")
     
     # Choose the kernel
-    kernel = st.sidebar.selectbox("Select Kernel", options=["linear", "poly", "rbf", "sigmoid"], index=2)
+    kernel = st.sidebar.selectbox("Select Kernel", options=["Linear", "Poly", "RBF", "Sigmoid"], index=2)
     
     # Regularization parameter C
-    C = st.sidebar.slider("C (Regularization parameter)", 0.01, 10.0, 1.0)
+    C = st.sidebar.slider("C (Regularisation parameter)", 0.01, 10.0, 1.0)
     
     # For the polynomial kernel, choose the degree
     if kernel == "poly":
@@ -37,8 +37,8 @@ def main():
     
     # Gamma parameter for kernels that use it
     if kernel in ["rbf", "poly", "sigmoid"]:
-        gamma_option = st.sidebar.selectbox("Gamma Option", options=["scale", "auto", "manual"], index=0)
-        if gamma_option == "manual":
+        gamma_option = st.sidebar.selectbox("Gamma Option", options=["Scale", "Auto", "Manual"], index=0)
+        if gamma_option == "Manual":
             gamma = st.sidebar.slider("Gamma value", 0.001, 1.0, 0.1)
         else:
             gamma = gamma_option
