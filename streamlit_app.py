@@ -1,9 +1,37 @@
+#**********************************************
+# Interactive SVM Classifier on Iris Dataset App
+# Version 1
+# 2nd February 2025
+# Jamie Crossman-Smith
+# jamie@bloch.ai
+#**********************************************
+# This Python code creates an interactive educational web application using Streamlit.
+# The application demonstrates how a Support Vector Machine (SVM) works on the Iris dataset.
+# Users can adjust various hyperparameters (e.g. Kernel, Regularisation parameter (C), Degree, Gamma) 
+# and select features for 2D visualisation of the decision boundary.
+#
+# The app displays:
+# - The dataset (with class labels linked to actual species: Setosa, Versicolor, Virginica)
+# - Model performance metrics such as overall accuracy, and a detailed classification report (including
+#   precision, recall, F1-score, and support)
+# - A confusion matrix to show correct versus misclassifications
+# - A decision boundary plot which visualises the regions of the feature space assigned to each class.
+#
+# Educational explanations are provided throughout the app (via sidebar expanders and info boxes)
+# to help users understand the effect of each hyperparameter, the significance of each evaluation metric,
+# and how to interpret the visual outputs.
+#
+# This app is intended to enhance understanding of SVMs in a practical, interactive manner.
+#**********************************************
+
+# Import necessary libraries for building the Streamlit app and handling data
 import streamlit as st
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# Import libraries for machine learning and evaluation
 from sklearn import datasets
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
@@ -23,7 +51,7 @@ def main():
     # ================================
     st.sidebar.header("SVM Hyperparameters")
     
-    # Educational expander for hyperparameters
+    # Expandable section with educational information on hyperparameters
     with st.sidebar.expander("Learn about SVM Hyperparameters"):
         st.markdown(
             """
@@ -65,9 +93,9 @@ def main():
     if kernel == "poly":
         degree = st.sidebar.slider("Degree (for Poly kernel)", 2, 5, 3)
     else:
-        degree = 3  # default value (not used if kernel != 'poly')
+        degree = 3  # Default value (not used if kernel != 'poly')
     
-    # Gamma parameter for kernels that use it
+    # Gamma parameter for applicable kernels
     if kernel in ["rbf", "poly", "sigmoid"]:
         gamma_options = {"Scale": "scale", "Auto": "auto", "Manual": "manual"}
         selected_gamma_option = st.sidebar.selectbox("Gamma Option", options=list(gamma_options.keys()), index=0)
@@ -77,7 +105,7 @@ def main():
         else:
             gamma = gamma_option_value
     else:
-        gamma = "scale"  # Not used for linear kernel
+        gamma = "scale"  # Not used for Linear kernel
 
     # Test set size for splitting the dataset
     test_size = st.sidebar.slider("Test Set Size (Fraction)", 0.1, 0.5, 0.2, step=0.05)
@@ -112,7 +140,7 @@ def main():
     st.subheader("Iris Dataset (first 5 rows)")
     st.write(df.head())
     
-    # Explain the class labels
+    # Explain the class labels and their corresponding species names
     st.info(
         "Note: In the Iris dataset, the target classes correspond to the following species:\n"
         "- **0:** Setosa\n"
@@ -153,7 +181,7 @@ def main():
     st.subheader("Model Performance")
     st.write(f"**Accuracy on test set:** {accuracy:.2f}")
 
-    # Display classification report
+    # Display the classification report
     report = classification_report(y_test, y_pred, output_dict=True)
     st.text("Classification Report:")
     st.write(pd.DataFrame(report).transpose())
@@ -167,7 +195,7 @@ def main():
         "These metrics allow you to assess the performance of the model on each species."
     )
 
-    # Confusion matrix
+    # Confusion matrix: Visualises correct vs misclassifications
     cm = confusion_matrix(y_test, y_pred)
     st.subheader("Confusion Matrix")
     fig_cm, ax_cm = plt.subplots()
@@ -178,7 +206,7 @@ def main():
     st.pyplot(fig_cm)
 
     st.info(
-        "The **Confusion Matrix** visualises the classifier's performance. Each row represents the actual class, while each column represents the predicted class. "
+        "The **Confusion Matrix** visualises the classifiers performance. Each row represents the actual class, while each column represents the predicted class. "
         "The diagonal elements show the number of correct predictions for each class, whereas off-diagonal elements indicate misclassifications. "
         "Ideally, most of the values should be concentrated along the diagonal."
     )
