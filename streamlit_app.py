@@ -263,7 +263,7 @@ def main():
     st.markdown("---")
     st.markdown("### Further Reading")
     st.markdown(
-        "For a detailed discussion on SVMs, check out my [Medium article](https://blochai.medium.com/)."
+        "For a detailed discussion on SVMs, check out my [Medium article](https://blochai.medium.com/the-complete-guide-to-support-vector-machines-from-theory-to-practice-5d1a7de9f5fe?sk=da315377fe68360a72081d437ee2aa5c)."
     )
 
     # ================================
